@@ -28,6 +28,11 @@ func check(e error) {
 	}
 }
 
+func printUsage() {
+	val := "usage: grep [-n] [-c/--colored] [-h/--help] [pattern] [file ...]"
+	fmt.Printf("%s\n", val)
+}
+
 func printOut(filename string, matchedLine string, lnum int) bool {
 	if showLineNum {
 		fmt.Printf("%s:%d: %s\n", filename, lnum, matchedLine)
