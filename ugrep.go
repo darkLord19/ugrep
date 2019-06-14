@@ -5,8 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -21,6 +21,7 @@ const (
 var (
 	showLineNum    bool
 	showColoredOut bool
+	fileCount      int
 )
 
 func check(e error) {
@@ -35,10 +36,13 @@ func printUsage() {
 }
 
 func printOut(filename string, matchedLine string, lnum string) {
+	if fileCount > 1 {
+		fmt.Printf("%s:", filename)
+	}
 	if showLineNum {
-		fmt.Printf("%s:%s: %s\n", filename, lnum, matchedLine)
+		fmt.Printf("%s: %s\n", lnum, matchedLine)
 	} else {
-		fmt.Printf("%s: %s\n", filename, matchedLine)
+		fmt.Printf("%s\n", matchedLine)
 	}
 }
 
@@ -66,6 +70,7 @@ func main() {
 
 	searchTerm := args[0]
 	filenames := args[1:]
+	fileCount = len(filenames)
 
 	for i := range filenames {
 		ln := 0
@@ -80,9 +85,9 @@ func main() {
 			line := scanner.Text()
 			// Check if line contains given search string
 			if strings.Contains(line, searchTerm) {
-				if showColoredOut{
+				if showColoredOut {
 					printColoredOut(filenames[i], line, strconv.Itoa(ln))
-				}else{
+				} else {
 					printOut(filenames[i], line, strconv.Itoa(ln))
 				}
 			}
