@@ -3,21 +3,22 @@ package main
 import (
 	// "bufio"
 	"fmt"
-	"strings"
+	// "strings"
 	// "io"
 	"io/ioutil"
 	"os"
+	"regexp"
 )
 
 func check(e error) {
-    if e != nil {
-        panic(e)
-    }
+	if e != nil {
+		panic(e)
+	}
 }
 
-func main(){
+func main() {
 	args := os.Args[1:]
-	if args==nil {
+	if args == nil {
 		panic("Please provide file name")
 	}
 	// fmt.Println(args)
@@ -25,6 +26,9 @@ func main(){
 	check(err)
 	data := string(dat)
 	// fmt.Print(string(data))
-	indice := strings.Index(data, args[1])
-	fmt.Println(strings.Split(data[indice:], "\n")[0])
+	re := regexp.MustCompile(args[1])
+	idx := re.FindAllStringIndex(data, -1)
+	for i := range idx {
+		fmt.Printf("%v: %v\n", args[0], data[idx[i][0]:idx[i][1]])
+	}
 }
