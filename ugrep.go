@@ -32,12 +32,20 @@ func check(e error) {
 	}
 }
 
+func getColoredString(str string, color string) string {
+	return color + str + resetColor
+}
+
 func printUsage() {
 	val := "usage: grep [-n] [-c/--colored] [-h/--help] [pattern] [file ...]"
 	fmt.Fprintf(stdOutWriter, "%s\n", val)
 }
 
 func printOut(filename string, matchedLine string, lnum string) {
+	if showColoredOut {
+		filename = getColoredString(filename, filenameColor)
+		lnum = getColoredString(filename, lineNumberColor)
+	}
 	if fileCount > 1 {
 		fmt.Fprintf(stdOutWriter, "%s:", filename)
 	}
@@ -47,12 +55,6 @@ func printOut(filename string, matchedLine string, lnum string) {
 		fmt.Fprintf(stdOutWriter, "%s\n", matchedLine)
 	}
 	stdOutWriter.Flush()
-}
-
-func printColoredOut(filename string, matchedLine string, lnum string) {
-	filename = filenameColor + filename + resetColor
-	lnum = lineNumberColor + lnum + resetColor
-	printOut(filename, matchedLine, lnum)
 }
 
 func init() {
@@ -98,11 +100,7 @@ func main() {
 					stdOutWriter.Flush()
 					break
 				}
-				if showColoredOut {
-					printColoredOut(filenames[i], line, strconv.Itoa(ln))
-				} else {
-					printOut(filenames[i], line, strconv.Itoa(ln))
-				}
+				printOut(filenames[i], line, strconv.Itoa(ln))
 			}
 			ln++
 		}
