@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"strconv"
 )
 
 const (
@@ -33,13 +34,12 @@ func printUsage() {
 	fmt.Printf("%s\n", val)
 }
 
-func printOut(filename string, matchedLine string, lnum int) bool {
+func printOut(filename string, matchedLine string, lnum string) {
 	if showLineNum {
 		fmt.Printf("%s:%d: %s\n", filename, lnum, matchedLine)
 	} else {
 		fmt.Printf("%s:%d: %s\n", filename, lnum, matchedLine)
 	}
-	return false
 }
 
 func init() {
@@ -74,7 +74,11 @@ func main() {
 			line := scanner.Text()
 			// Check if line contains given search string
 			if strings.Contains(line, searchTerm) {
-				printOut(filenames[i], line, ln)
+				if showColoredOut{
+					printColoredOut(filenames[i], line, ln)
+				}else{
+					printOut(filenames[i], line, strconv.Itoa(ln))
+				}
 			}
 			ln++
 		}
