@@ -7,6 +7,13 @@ import (
 	"strings"
 )
 
+const (
+	patternColor    = "\033[31m"
+	filenameColor   = "\033[35m"
+	lineNumberColor = "\033[34m"
+	resetColor      = "\033[0m"
+)
+
 func check(e error) {
 	if e != nil {
 		panic(e)
@@ -32,7 +39,7 @@ func main() {
 			line := scanner.Text()
 			// Check if line contains given search string
 			if strings.Contains(line, searchTerm) {
-				fmt.Printf("%v: %v\n", filenames[i], line)
+				fmt.Printf("%v%v%v: %v\n", filenameColor, filenames[i], resetColor, line)
 			}
 		}
 	}
