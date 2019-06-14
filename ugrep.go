@@ -42,6 +42,12 @@ func printOut(filename string, matchedLine string, lnum string) {
 	}
 }
 
+func printColoredOut(filename string, matchedLine string, lnum string) {
+	filename = filenameColor + filename + resetColor
+	lnum = lineNumberColor + lnum + resetColor
+	printOut(filename, matchedLine, lnum)
+}
+
 func init() {
 	flag.BoolVar(&showLineNum, "n", false, "Flag to specify if you want to print line numbers or not")
 	flag.BoolVar(&showColoredOut, "colored", false, "Flag to specify if you want colored output or not")
@@ -75,7 +81,7 @@ func main() {
 			// Check if line contains given search string
 			if strings.Contains(line, searchTerm) {
 				if showColoredOut{
-					printColoredOut(filenames[i], line, ln)
+					printColoredOut(filenames[i], line, strconv.Itoa(ln))
 				}else{
 					printOut(filenames[i], line, strconv.Itoa(ln))
 				}
