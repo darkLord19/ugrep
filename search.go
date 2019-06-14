@@ -21,11 +21,10 @@ func main(){
 		panic("Please provide file name")
 	}
 	// fmt.Println(args)
-	data, err := ioutil.ReadFile(args[0])
-    check(err)
+	dat, err := ioutil.ReadFile(args[0])
+	check(err)
+	data := string(dat)
 	// fmt.Print(string(data))
-	if strings.Contains(string(data), args[1]) {
-		fmt.Printf("Found %v\n", args[1])
-	}
-	
+	indice := strings.Index(data, args[1])
+	fmt.Printf("%v\n", data[indice:])
 }
