@@ -22,6 +22,7 @@ var (
 	showLineNum      bool
 	showColoredOut   bool
 	showMatchedFiles bool
+	showNoMatchFiles bool
 	fileCount        int
 	stdOutWriter     *bufio.Writer
 )
@@ -70,6 +71,7 @@ func init() {
 	flag.BoolVar(&showColoredOut, "colored", false, "Flag to specify if you want colored output or not")
 	flag.BoolVar(&showColoredOut, "c", false, "Flag to specify if you want colored output or not (shorthand)")
 	flag.BoolVar(&showMatchedFiles, "l", false, "Flag to get list of files containing search pattern")
+	flag.BoolVar(&showNoMatchFiles, "L", false, "Flag to get list of files not containing search pattern")
 	flag.Parse()
 	stdOutWriter = bufio.NewWriter(os.Stdout)
 }
@@ -97,12 +99,14 @@ func main() {
 
 		scanner := bufio.NewScanner(file)
 
+		matched := false
 		//Read each line one by one of file
 		for scanner.Scan() {
 			line := scanner.Text()
 			// Check if line contains given search string
 			indices := re.FindAllStringIndex(line, -1)
 			if indices != nil {
+				matched = true
 				if showMatchedFiles {
 					printFilename(filenames[i])
 					break
@@ -110,6 +114,9 @@ func main() {
 				printOut(filenames[i], line, strconv.Itoa(ln))
 			}
 			ln++
+		}
+		if showNoMatchFiles && !matched {
+			printFilename(filenames[i])
 		}
 	}
 }
