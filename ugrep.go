@@ -1,13 +1,10 @@
 package main
 
 import (
-	// "bufio"
+	"bufio"
 	"fmt"
-	// "strings"
-	// "io"
-	"io/ioutil"
 	"os"
-	"regexp"
+	"strings"
 )
 
 func check(e error) {
@@ -17,18 +14,24 @@ func check(e error) {
 }
 
 func main() {
-	args := os.Args[1:]
-	if args == nil {
-		panic("Please provide file name")
+	if len(os.Args) < 3 {
+		panic("Invalid input")
 	}
-	// fmt.Println(args)
-	dat, err := ioutil.ReadFile(args[0])
+	searchTerm := os.Args[1]
+	filename := os.Args[2]
+
+	file, err := os.Open(filename)
 	check(err)
-	data := string(dat)
-	// fmt.Print(string(data))
-	re := regexp.MustCompile(args[1])
-	idx := re.FindAllStringIndex(data, -1)
-	for i := range idx {
-		fmt.Printf("%v: %v\n", args[0], data[idx[i][0]:idx[i][1]])
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	
+	//Read each line one by one of file
+	for scanner.Scan() {
+		line := scanner.Text()
+		// Check if line contains given search string
+		if strings.Contains(line, searchTerm) {
+			fmt.Printf("%v: %v\n", filename, line)
+		}
 	}
 }
