@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -22,6 +23,7 @@ var (
 	showLineNum    bool
 	showColoredOut bool
 	fileCount      int
+	stdOutWriter   io.Writer
 )
 
 func check(e error) {
@@ -32,17 +34,17 @@ func check(e error) {
 
 func printUsage() {
 	val := "usage: grep [-n] [-c/--colored] [-h/--help] [pattern] [file ...]"
-	fmt.Printf("%s\n", val)
+	fmt.Fprintf(stdOutWriter, "%s\n", val)
 }
 
 func printOut(filename string, matchedLine string, lnum string) {
 	if fileCount > 1 {
-		fmt.Printf("%s:", filename)
+		fmt.Fprintf(stdOutWriter, "%s:", filename)
 	}
 	if showLineNum {
-		fmt.Printf("%s: %s\n", lnum, matchedLine)
+		fmt.Fprintf(stdOutWriter, "%s: %s\n", lnum, matchedLine)
 	} else {
-		fmt.Printf("%s\n", matchedLine)
+		fmt.Fprintf(stdOutWriter, "%s\n", matchedLine)
 	}
 }
 
@@ -57,6 +59,7 @@ func init() {
 	flag.BoolVar(&showColoredOut, "colored", false, "Flag to specify if you want colored output or not")
 	flag.BoolVar(&showColoredOut, "c", false, "Flag to specify if you want colored output or not (shorthand)")
 	flag.Parse()
+	stdOutWriter = bufio.NewWriter(os.Stdout)
 }
 
 func main() {
