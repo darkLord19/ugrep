@@ -26,5 +26,5 @@ func main(){
 	data := string(dat)
 	// fmt.Print(string(data))
 	indice := strings.Index(data, args[1])
-	fmt.Printf("%v\n", data[indice:])
+	fmt.Println(strings.Split(data[indice:], "\n")[0])
 }
