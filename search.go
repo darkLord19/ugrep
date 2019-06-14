@@ -18,20 +18,22 @@ func main() {
 		panic("Invalid input")
 	}
 	searchTerm := os.Args[1]
-	filename := os.Args[2]
+	filenames := os.Args[2:]
 
-	file, err := os.Open(filename)
-	check(err)
-	defer file.Close()
+	for i := range filenames {
+		file, err := os.Open(filenames[i])
+		check(err)
+		defer file.Close()
 
-	scanner := bufio.NewScanner(file)
-	
-	//Read each line one by one of file
-	for scanner.Scan() {
-		line := scanner.Text()
-		// Check if line contains given search string
-		if strings.Contains(line, searchTerm) {
-			fmt.Printf("%v: %v\n", filename, line)
+		scanner := bufio.NewScanner(file)
+
+		//Read each line one by one of file
+		for scanner.Scan() {
+			line := scanner.Text()
+			// Check if line contains given search string
+			if strings.Contains(line, searchTerm) {
+				fmt.Printf("%v: %v\n", filenames[i], line)
+			}
 		}
 	}
 }
