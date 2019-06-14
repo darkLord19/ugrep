@@ -38,7 +38,7 @@ func printOut(filename string, matchedLine string, lnum string) {
 	if showLineNum {
 		fmt.Printf("%s:%s: %s\n", filename, lnum, matchedLine)
 	} else {
-		fmt.Printf("%s:%s: %s\n", filename, lnum, matchedLine)
+		fmt.Printf("%s: %s\n", filename, matchedLine)
 	}
 }
 
