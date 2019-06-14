@@ -41,6 +41,14 @@ func printUsage() {
 	fmt.Fprintf(stdOutWriter, "%s\n", val)
 }
 
+func printFilename(filename string) {
+	if showColoredOut {
+		filename = getColoredString(filename, filenameColor)
+	}
+	fmt.Fprintf(stdOutWriter, "%s\n", filename)
+	stdOutWriter.Flush()
+}
+
 func printOut(filename string, matchedLine string, lnum string) {
 	if showColoredOut {
 		filename = getColoredString(filename, filenameColor)
@@ -96,8 +104,7 @@ func main() {
 			indices := re.FindAllStringIndex(line, -1)
 			if indices != nil {
 				if showMatchedFiles {
-					fmt.Fprint(stdOutWriter, filenames[i], "\n")
-					stdOutWriter.Flush()
+					printFilename(filenames[i])
 					break
 				}
 				printOut(filenames[i], line, strconv.Itoa(ln))
