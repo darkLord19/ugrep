@@ -19,10 +19,11 @@ const (
 )
 
 var (
-	showLineNum    bool
-	showColoredOut bool
-	fileCount      int
-	stdOutWriter   *bufio.Writer
+	showLineNum      bool
+	showColoredOut   bool
+	showMatchedFiles bool
+	fileCount        int
+	stdOutWriter     *bufio.Writer
 )
 
 func check(e error) {
@@ -58,6 +59,7 @@ func init() {
 	flag.BoolVar(&showLineNum, "n", false, "Flag to specify if you want to print line numbers or not")
 	flag.BoolVar(&showColoredOut, "colored", false, "Flag to specify if you want colored output or not")
 	flag.BoolVar(&showColoredOut, "c", false, "Flag to specify if you want colored output or not (shorthand)")
+	flag.BoolVar(&showMatchedFiles, "l", false, "Flag to get list of files containing search pattern")
 	flag.Parse()
 	stdOutWriter = bufio.NewWriter(os.Stdout)
 }
@@ -91,6 +93,11 @@ func main() {
 			// Check if line contains given search string
 			indices := re.FindAllStringIndex(line, -1)
 			if indices != nil {
+				if showMatchedFiles {
+					fmt.Fprint(stdOutWriter, filenames[i], "\n")
+					stdOutWriter.Flush()
+					break
+				}
 				if showColoredOut {
 					printColoredOut(filenames[i], line, strconv.Itoa(ln))
 				} else {
