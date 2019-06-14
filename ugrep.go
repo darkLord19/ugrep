@@ -53,7 +53,7 @@ func printFilename(filename string) {
 func printOut(filename string, matchedLine string, lnum string) {
 	if showColoredOut {
 		filename = getColoredString(filename, filenameColor)
-		lnum = getColoredString(filename, lineNumberColor)
+		lnum = getColoredString(lnum, lineNumberColor)
 	}
 	if fileCount > 1 {
 		fmt.Fprintf(stdOutWriter, "%s:", filename)
