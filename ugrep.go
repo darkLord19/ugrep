@@ -2,10 +2,10 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
 	"strings"
-	"flag"
 )
 
 const (
@@ -13,10 +13,12 @@ const (
 	filenameColor   = "\033[35m"
 	lineNumberColor = "\033[34m"
 	resetColor      = "\033[0m"
+
+	EXIT_FAILURE = 1
 )
 
 var (
-	showLineNum bool
+	showLineNum    bool
 	showColoredOut bool
 )
 
@@ -29,7 +31,7 @@ func check(e error) {
 func printOut(filename string, matchedLine string, lnum int) bool {
 	if showLineNum {
 		fmt.Printf("%s:%d: %s\n", filename, lnum, matchedLine)
-	}else{
+	} else {
 		fmt.Printf("%s:%d: %s\n", filename, lnum, matchedLine)
 	}
 	return false
@@ -44,11 +46,13 @@ func init() {
 
 func main() {
 
-	if len(os.Args) < 3 {
-		panic("Invalid input")
+	args := flag.Args()
+
+	if len(args) < 2 {
+		printUsage()
+		os.Exit(EXIT_FAILURE)
 	}
 
-	args := flag.Args()
 	searchTerm := args[0]
 	filenames := args[1:]
 
