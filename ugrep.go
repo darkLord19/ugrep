@@ -111,6 +111,9 @@ func main() {
 					printFilename(filenames[i])
 					break
 				}
+				if showNoMatchFiles {
+					break
+				}
 				printOut(filenames[i], line, strconv.Itoa(ln))
 			}
 			ln++
