@@ -4,10 +4,9 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"io"
 	"os"
+	"regexp"
 	"strconv"
-	"strings"
 )
 
 const (
@@ -23,7 +22,7 @@ var (
 	showLineNum    bool
 	showColoredOut bool
 	fileCount      int
-	stdOutWriter   io.Writer
+	stdOutWriter   *bufio.Writer
 )
 
 func check(e error) {
@@ -46,6 +45,7 @@ func printOut(filename string, matchedLine string, lnum string) {
 	} else {
 		fmt.Fprintf(stdOutWriter, "%s\n", matchedLine)
 	}
+	stdOutWriter.Flush()
 }
 
 func printColoredOut(filename string, matchedLine string, lnum string) {
@@ -75,6 +75,8 @@ func main() {
 	filenames := args[1:]
 	fileCount = len(filenames)
 
+	re := regexp.MustCompile(searchTerm)
+
 	for i := range filenames {
 		ln := 0
 		file, err := os.Open(filenames[i])
@@ -87,7 +89,8 @@ func main() {
 		for scanner.Scan() {
 			line := scanner.Text()
 			// Check if line contains given search string
-			if strings.Contains(line, searchTerm) {
+			indices := re.FindAllStringIndex(line, -1)
+			if indices != nil {
 				if showColoredOut {
 					printColoredOut(filenames[i], line, strconv.Itoa(ln))
 				} else {
