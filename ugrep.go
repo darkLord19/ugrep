@@ -114,7 +114,10 @@ func main() {
 	filenames := args[1:]
 	fileCount = len(filenames)
 
-	re, _ := regexp.Compile(searchTerm)
+	re, err := regexp.Compile(searchTerm)
+	if err != nil {
+		os.Exit(EXIT_FAILURE)
+	}
 
 	for i := range filenames {
 		ln := 0
