@@ -50,7 +50,7 @@ func printFilename(filename string) {
 	stdOutWriter.Flush()
 }
 
-func printOut(filename string, matchedLine string, lnum string) {
+func printOut(filename string, matchedLine string, lnum string, matchedIndices [][]int) {
 	if showColoredOut {
 		filename = getColoredString(filename, filenameColor)
 		lnum = getColoredString(lnum, lineNumberColor)
@@ -59,10 +59,17 @@ func printOut(filename string, matchedLine string, lnum string) {
 		fmt.Fprintf(stdOutWriter, "%s:", filename)
 	}
 	if showLineNum {
-		fmt.Fprintf(stdOutWriter, "%s: %s\n", lnum, matchedLine)
-	} else {
-		fmt.Fprintf(stdOutWriter, "%s\n", matchedLine)
+		fmt.Fprintf(stdOutWriter, "%s: ", lnum)
 	}
+	lastIdx := 0
+	for i := range matchedIndices{
+		start := matchedIndices[i][0]
+		end := matchedIndices[i][1]
+		fmt.Fprintf(stdOutWriter, "%s", matchedLine[lastIdx:start])
+		fmt.Fprintf(stdOutWriter, "%s", getColoredString(matchedLine[start:end], patternColor))
+		lastIdx = end
+	}
+	fmt.Fprint(stdOutWriter, matchedLine[lastIdx:], "\n")
 	stdOutWriter.Flush()
 }
 
@@ -114,7 +121,7 @@ func main() {
 				if showNoMatchFiles {
 					break
 				}
-				printOut(filenames[i], line, strconv.Itoa(ln))
+				printOut(filenames[i], line, strconv.Itoa(ln), indices)
 			}
 			ln++
 		}
