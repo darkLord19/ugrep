@@ -94,7 +94,8 @@ func printOut(filename string, matchedLine string, lnum string, matchedIndices [
 func init() {
 	flag.BoolVar(&showLineNum, "n", false, "Flag to specify if you want to print line numbers or not")
 	flag.BoolVar(&showColoredOut, "-colored", false, "Flag to specify if you want colored output or not")
-	flag.BoolVar(&showMatchedLineCount, "c", false, "Count of selected lines is written to standard output")
+	flag.BoolVar(&showMatchedLineCount, "c", false, "Count of selected lines is written to standard output (shorthand)")
+	flag.BoolVar(&showMatchedLineCount, "-count", false, "Count of selected lines is written to standard output")
 	flag.BoolVar(&showMatchedFiles, "l", false, "Flag to get list of files containing search pattern")
 	flag.BoolVar(&showNoMatchFiles, "L", false, "Flag to get list of files not containing search pattern")
 	flag.Parse()
