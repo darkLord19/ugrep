@@ -50,7 +50,6 @@ func printFilename(filename string) {
 			filename = getColoredString(filename, filenameColor)
 		}
 		fmt.Fprintf(stdOutWriter, "%s:", filename)
-		stdOutWriter.Flush()
 	}
 }
 
@@ -70,7 +69,6 @@ func printMatches(matchedLine string, matchedIndices [][]int) {
 		lastIdx = end
 	}
 	fmt.Fprint(stdOutWriter, matchedLine[lastIdx:], "\n")
-	stdOutWriter.Flush()
 }
 
 func printCountOut(filename string, count int) {
@@ -78,7 +76,6 @@ func printCountOut(filename string, count int) {
 		fmt.Fprintf(stdOutWriter, "%s:", filename)
 	}
 	fmt.Fprintf(stdOutWriter, "%d\n", count)
-	stdOutWriter.Flush()
 }
 
 func printOut(filename string, matchedLine string, lnum string, matchedIndices [][]int) {
@@ -157,4 +154,5 @@ func main() {
 			printCountOut(filenames[i], matchedLines)
 		}
 	}
+	stdOutWriter.Flush()
 }
