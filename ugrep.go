@@ -72,10 +72,13 @@ func printMatches(matchedLine string, matchedIndices [][]int) {
 }
 
 func printCountOut(filename string, count int) {
-	if fileCount > 1 {
-		fmt.Fprintf(stdOutWriter, "%s:", filename)
-	}
+	printFilename(filename)
 	fmt.Fprintf(stdOutWriter, "%d\n", count)
+}
+
+func printMatchedFiles(filename string) {
+	printFilename(filename)
+	fmt.Fprintf(stdOutWriter, "\n")
 }
 
 func printOut(filename string, matchedLine string, lnum string, matchedIndices [][]int) {
@@ -148,7 +151,7 @@ func main() {
 			ln++
 		}
 		if showNoMatchFiles && !matched {
-			printFilename(filenames[i])
+			printMatchedFiles(filenames[i])
 		}
 		if showMatchedLineCount {
 			printCountOut(filenames[i], matchedLines)
