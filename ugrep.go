@@ -40,6 +40,7 @@ func getColoredString(str string, color string) string {
 func printUsage() {
 	val := "usage: grep [-n] [-c/--colored] [-h/--help] [pattern] [file ...]"
 	fmt.Fprintf(stdOutWriter, "%s\n", val)
+	stdOutWriter.Flush()
 }
 
 func printFilename(filename string) {
