@@ -19,12 +19,13 @@ const (
 )
 
 var (
-	showLineNum      bool
-	showColoredOut   bool
-	showMatchedFiles bool
-	showNoMatchFiles bool
-	fileCount        int
-	stdOutWriter     *bufio.Writer
+	showLineNum          bool
+	showColoredOut       bool
+	showMatchedFiles     bool
+	showNoMatchFiles     bool
+	showMatchedLineCount bool
+	fileCount            int
+	stdOutWriter         *bufio.Writer
 )
 
 func check(e error) {
@@ -51,6 +52,14 @@ func printFilename(filename string) {
 	stdOutWriter.Flush()
 }
 
+func printCountOut(filename string, count int) {
+	if fileCount > 1 {
+		fmt.Fprintf(stdOutWriter, "%s:", filename)
+	}
+	fmt.Fprintf(stdOutWriter, "%d\n", count)
+	stdOutWriter.Flush()
+}
+
 func printOut(filename string, matchedLine string, lnum string, matchedIndices [][]int) {
 	if showColoredOut {
 		filename = getColoredString(filename, filenameColor)
@@ -63,7 +72,7 @@ func printOut(filename string, matchedLine string, lnum string, matchedIndices [
 		fmt.Fprintf(stdOutWriter, "%s: ", lnum)
 	}
 	lastIdx := 0
-	for i := range matchedIndices{
+	for i := range matchedIndices {
 		start := matchedIndices[i][0]
 		end := matchedIndices[i][1]
 		fmt.Fprintf(stdOutWriter, "%s", matchedLine[lastIdx:start])
@@ -77,7 +86,7 @@ func printOut(filename string, matchedLine string, lnum string, matchedIndices [
 func init() {
 	flag.BoolVar(&showLineNum, "n", false, "Flag to specify if you want to print line numbers or not")
 	flag.BoolVar(&showColoredOut, "-colored", false, "Flag to specify if you want colored output or not")
-	flag.BoolVar(&showColoredOut, "c", false, "Flag to specify if you want colored output or not (shorthand)")
+	flag.BoolVar(&showMatchedLineCount, "c", false, "Count of selected lines is written to standard output")
 	flag.BoolVar(&showMatchedFiles, "l", false, "Flag to get list of files containing search pattern")
 	flag.BoolVar(&showNoMatchFiles, "L", false, "Flag to get list of files not containing search pattern")
 	flag.Parse()
@@ -108,11 +117,18 @@ func main() {
 		scanner := bufio.NewScanner(file)
 
 		matched := false
+		matchedLines := 0
 		//Read each line one by one of file
 		for scanner.Scan() {
 			line := scanner.Text()
 			// Check if line contains given search string
 			indices := re.FindAllStringIndex(line, -1)
+			if showMatchedLineCount {
+				if len(indices) > 0 {
+					matchedLines++
+					continue
+				}
+			}
 			if indices != nil {
 				matched = true
 				if showMatchedFiles {
@@ -128,6 +144,9 @@ func main() {
 		}
 		if showNoMatchFiles && !matched {
 			printFilename(filenames[i])
+		}
+		if showMatchedLineCount {
+			printCountOut(filenames[i], matchedLines)
 		}
 	}
 }
