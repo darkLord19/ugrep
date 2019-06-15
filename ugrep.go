@@ -25,6 +25,7 @@ var (
 	showNoMatchFiles     bool
 	showMatchedLineCount bool
 	fileCount            int
+	regex                *regexp.Regexp
 	stdOutWriter         *bufio.Writer
 )
 
@@ -90,6 +91,49 @@ func printOut(filename string, matchedLine string, lnum string, matchedIndices [
 	printMatches(matchedLine, matchedIndices)
 }
 
+func searchInFile(filename string) {
+	ln := 0
+	file, err := os.Open(filename)
+	check(err)
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	matched := false
+	matchedLines := 0
+
+	//Read each line one by one of file
+	for scanner.Scan() {
+		line := scanner.Text()
+		// Check if line contains given search string
+		indices := regex.FindAllStringIndex(line, -1)
+		if showMatchedLineCount {
+			if len(indices) > 0 {
+				matchedLines++
+				continue
+			}
+		}
+		if indices != nil {
+			matched = true
+			if showMatchedFiles {
+				printFilename(filename)
+				break
+			}
+			if showNoMatchFiles {
+				break
+			}
+			printOut(filename, line, strconv.Itoa(ln), indices)
+		}
+		ln++
+	}
+	if showNoMatchFiles && !matched {
+		printMatchedFiles(filename)
+	}
+	if showMatchedLineCount {
+		printCountOut(filename, matchedLines)
+	}
+}
+
 func init() {
 	flag.BoolVar(&showLineNum, "n", false, "Flag to specify if you want to print line numbers or not")
 	flag.BoolVar(&showColoredOut, "-colored", false, "Flag to specify if you want colored output or not")
@@ -114,51 +158,14 @@ func main() {
 	filenames := args[1:]
 	fileCount = len(filenames)
 
-	re, err := regexp.Compile(searchTerm)
+	var err error
+	regex, err = regexp.Compile(searchTerm)
 	if err != nil {
 		os.Exit(EXIT_FAILURE)
 	}
 
 	for i := range filenames {
-		ln := 0
-		file, err := os.Open(filenames[i])
-		check(err)
-		defer file.Close()
-
-		scanner := bufio.NewScanner(file)
-
-		matched := false
-		matchedLines := 0
-		//Read each line one by one of file
-		for scanner.Scan() {
-			line := scanner.Text()
-			// Check if line contains given search string
-			indices := re.FindAllStringIndex(line, -1)
-			if showMatchedLineCount {
-				if len(indices) > 0 {
-					matchedLines++
-					continue
-				}
-			}
-			if indices != nil {
-				matched = true
-				if showMatchedFiles {
-					printFilename(filenames[i])
-					break
-				}
-				if showNoMatchFiles {
-					break
-				}
-				printOut(filenames[i], line, strconv.Itoa(ln), indices)
-			}
-			ln++
-		}
-		if showNoMatchFiles && !matched {
-			printMatchedFiles(filenames[i])
-		}
-		if showMatchedLineCount {
-			printCountOut(filenames[i], matchedLines)
-		}
+		searchInFile(filenames[i])
 	}
 	stdOutWriter.Flush()
 }
