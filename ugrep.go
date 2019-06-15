@@ -76,7 +76,7 @@ func printOut(filename string, matchedLine string, lnum string, matchedIndices [
 
 func init() {
 	flag.BoolVar(&showLineNum, "n", false, "Flag to specify if you want to print line numbers or not")
-	flag.BoolVar(&showColoredOut, "colored", false, "Flag to specify if you want colored output or not")
+	flag.BoolVar(&showColoredOut, "-colored", false, "Flag to specify if you want colored output or not")
 	flag.BoolVar(&showColoredOut, "c", false, "Flag to specify if you want colored output or not (shorthand)")
 	flag.BoolVar(&showMatchedFiles, "l", false, "Flag to get list of files containing search pattern")
 	flag.BoolVar(&showNoMatchFiles, "L", false, "Flag to get list of files not containing search pattern")
