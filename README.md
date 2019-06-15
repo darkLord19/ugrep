@@ -5,11 +5,11 @@ My own minimal grep implementation in Golang.
 
 ## Downloads
 
-Download for Mac OS
+Download for [Linux](https://github.com/darkLord19/ugrep/releases/download/0.9/ugrep)
 
-Download for Linux
+Download for [Windows](https://github.com/darkLord19/ugrep/releases/download/0.9/ugrep.exe)
 
-Download for Windows
+Download for [Mac OS](https://github.com/darkLord19/ugrep/releases/download/0.9/ugrep_macos)
 
 ## Usage
 ```
