@@ -55,6 +55,9 @@ func printFilename(filename string) {
 
 func printLineNum(lnum string) {
 	if showLineNum {
+		if showColoredOut {
+			lnum = getColoredString(lnum, lineNumberColor)
+		}
 		fmt.Fprintf(stdOutWriter, "%s: ", lnum)
 	}
 }
@@ -82,10 +85,6 @@ func printMatchedFiles(filename string) {
 }
 
 func printOut(filename string, matchedLine string, lnum string, matchedIndices [][]int) {
-	if showColoredOut {
-		filename = getColoredString(filename, filenameColor)
-		lnum = getColoredString(lnum, lineNumberColor)
-	}
 	printFilename(filename)
 	printLineNum(lnum)
 	printMatches(matchedLine, matchedIndices)
