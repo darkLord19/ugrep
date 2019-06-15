@@ -45,10 +45,31 @@ func printUsage() {
 }
 
 func printFilename(filename string) {
-	if showColoredOut {
-		filename = getColoredString(filename, filenameColor)
+	if fileCount > 1 {
+		if showColoredOut {
+			filename = getColoredString(filename, filenameColor)
+		}
+		fmt.Fprintf(stdOutWriter, "%s:", filename)
+		stdOutWriter.Flush()
 	}
-	fmt.Fprintf(stdOutWriter, "%s\n", filename)
+}
+
+func printLineNum(lnum string) {
+	if showLineNum {
+		fmt.Fprintf(stdOutWriter, "%s: ", lnum)
+	}
+}
+
+func printMatches(matchedLine string, matchedIndices [][]int) {
+	lastIdx := 0
+	for i := range matchedIndices {
+		start := matchedIndices[i][0]
+		end := matchedIndices[i][1]
+		fmt.Fprintf(stdOutWriter, "%s", matchedLine[lastIdx:start])
+		fmt.Fprintf(stdOutWriter, "%s", getColoredString(matchedLine[start:end], patternColor))
+		lastIdx = end
+	}
+	fmt.Fprint(stdOutWriter, matchedLine[lastIdx:], "\n")
 	stdOutWriter.Flush()
 }
 
@@ -65,22 +86,9 @@ func printOut(filename string, matchedLine string, lnum string, matchedIndices [
 		filename = getColoredString(filename, filenameColor)
 		lnum = getColoredString(lnum, lineNumberColor)
 	}
-	if fileCount > 1 {
-		fmt.Fprintf(stdOutWriter, "%s:", filename)
-	}
-	if showLineNum {
-		fmt.Fprintf(stdOutWriter, "%s: ", lnum)
-	}
-	lastIdx := 0
-	for i := range matchedIndices {
-		start := matchedIndices[i][0]
-		end := matchedIndices[i][1]
-		fmt.Fprintf(stdOutWriter, "%s", matchedLine[lastIdx:start])
-		fmt.Fprintf(stdOutWriter, "%s", getColoredString(matchedLine[start:end], patternColor))
-		lastIdx = end
-	}
-	fmt.Fprint(stdOutWriter, matchedLine[lastIdx:], "\n")
-	stdOutWriter.Flush()
+	printFilename(filename)
+	printLineNum(lnum)
+	printMatches(matchedLine, matchedIndices)
 }
 
 func init() {
