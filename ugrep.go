@@ -96,7 +96,7 @@ func main() {
 	filenames := args[1:]
 	fileCount = len(filenames)
 
-	re := regexp.MustCompile(searchTerm)
+	re, _ := regexp.Compile(searchTerm)
 
 	for i := range filenames {
 		ln := 0
