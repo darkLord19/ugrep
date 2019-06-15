@@ -31,7 +31,9 @@ var (
 
 func check(e error) {
 	if e != nil {
-		panic(e)
+		fmt.Fprintf(stdOutWriter, "%s\n", e.Error())
+		stdOutWriter.Flush()
+		os.Exit(EXIT_FAILURE)
 	}
 }
 
