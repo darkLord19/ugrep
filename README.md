@@ -13,11 +13,13 @@ Download for [Mac OS](https://github.com/darkLord19/ugrep/releases/download/0.9/
 
 ## Usage
 ```
-Usage of ugrep:
-  -L	Flag to get list of files not containing search pattern
-  -c	Flag to specify if you want colored output or not (shorthand)
-  -colored
+Usage of ./ugrep:
+  --colored
     	Flag to specify if you want colored output or not
+  --count
+    	Count of selected lines is written to standard output
+  -L	Flag to get list of files not containing search pattern
+  -c	Count of selected lines is written to standard output (shorthand)
   -l	Flag to get list of files containing search pattern
   -n	Flag to specify if you want to print line numbers or not
 ```
