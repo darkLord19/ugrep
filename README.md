@@ -1,7 +1,7 @@
 # ugrep - micro grep
 
 
-My own minimal grep implementation in Golang.
+My own minimal, cross-platform grep implementation in Golang.
 
 ## Downloads
 
@@ -14,7 +14,7 @@ Download for [Mac OS](https://github.com/darkLord19/ugrep/releases/download/0.9/
 ## Usage
 ```
 Usage of ./ugrep:
-  --colored
+  --coloredcross-platform 
     	Flag to specify if you want colored output or not
   --count
     	Count of selected lines is written to standard output
