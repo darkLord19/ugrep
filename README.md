@@ -21,5 +21,7 @@ Usage of ./ugrep:
   -L	Flag to get list of files not containing search pattern
   -c	Count of selected lines is written to standard output (shorthand)
   -l	Flag to get list of files containing search pattern
+  -m int
+    	Stop reading the file after num matches (default -1)
   -n	Flag to specify if you want to print line numbers or not
 ```
