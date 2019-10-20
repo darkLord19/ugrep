@@ -24,4 +24,5 @@ Usage of ./ugrep:
   -m int
     	Stop reading the file after num matches (default -1)
   -n	Flag to specify if you want to print line numbers or not
+  -v	Display version information and exit.
 ```

@@ -15,6 +15,8 @@ const (
 	lineNumberColor = "\033[34m"
 	resetColor      = "\033[0m"
 
+	version = "0.9"
+
 	EXIT_FAILURE = 1
 )
 
@@ -24,6 +26,7 @@ var (
 	showMatchedFiles     bool
 	showNoMatchFiles     bool
 	showMatchedLineCount bool
+	showVersion          bool
 	stopAfterXMatches    int
 	fileCount            int
 	regex                *regexp.Regexp
@@ -44,6 +47,12 @@ func getColoredString(str string, color string) string {
 
 func printUsage() {
 	val := "usage: grep [-n] [-c/--colored] [-h/--help] [-l] [-L] [pattern] [file ...]"
+	fmt.Fprintf(stdOutWriter, "%s\n", val)
+	stdOutWriter.Flush()
+}
+
+func printVersion() {
+	val := "ugrep " + version
 	fmt.Fprintf(stdOutWriter, "%s\n", val)
 	stdOutWriter.Flush()
 }
@@ -149,6 +158,8 @@ func init() {
 	flag.BoolVar(&showMatchedLineCount, "-count", false, "Count of selected lines is written to standard output")
 	flag.BoolVar(&showMatchedFiles, "l", false, "Flag to get list of files containing search pattern")
 	flag.BoolVar(&showNoMatchFiles, "L", false, "Flag to get list of files not containing search pattern")
+	flag.BoolVar(&showVersion, "-version", false, "Display version information and exit.")
+	flag.BoolVar(&showVersion, "v", false, "Display version information and exit.(shorthand)")
 
 	flag.IntVar(&stopAfterXMatches, "m", -1, "Stop reading the file after num matches")
 
@@ -157,6 +168,11 @@ func init() {
 }
 
 func main() {
+
+	if showVersion {
+		printVersion()
+		os.Exit(0)
+	}
 
 	args := flag.Args()
 
