@@ -15,7 +15,7 @@ const (
 	lineNumberColor = "\033[34m"
 	resetColor      = "\033[0m"
 
-	version = "0.9"
+	version = "1.0"
 
 	EXIT_FAILURE = 1
 )
