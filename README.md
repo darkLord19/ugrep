@@ -1,7 +1,7 @@
 # ugrep - micro grep
 
 
-My own minimal, cross-platform grep implementation in Golang.
+Minimal, cross-platform grep implementation in Golang.
 
 ## Downloads
 
