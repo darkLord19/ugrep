@@ -24,6 +24,7 @@ var (
 	showMatchedFiles     bool
 	showNoMatchFiles     bool
 	showMatchedLineCount bool
+	stopAfterXMatches    int
 	fileCount            int
 	regex                *regexp.Regexp
 	stdOutWriter         *bufio.Writer
@@ -103,12 +104,14 @@ func searchInFile(filename string) {
 
 	matched := false
 	matchedLines := 0
+	matchedStrings := 0
 
 	//Read each line one by one of file
 	for scanner.Scan() {
 		line := scanner.Text()
 		// Check if line contains given search string
 		indices := regex.FindAllStringIndex(line, -1)
+		matchedStrings += len(indices)
 		if showMatchedLineCount {
 			if len(indices) > 0 {
 				matchedLines++
@@ -127,6 +130,9 @@ func searchInFile(filename string) {
 			printOut(filename, line, strconv.Itoa(ln), indices)
 		}
 		ln++
+		if stopAfterXMatches == matchedStrings {
+			return
+		}
 	}
 	if showNoMatchFiles && !matched {
 		printMatchedFiles(filename)
@@ -143,6 +149,9 @@ func init() {
 	flag.BoolVar(&showMatchedLineCount, "-count", false, "Count of selected lines is written to standard output")
 	flag.BoolVar(&showMatchedFiles, "l", false, "Flag to get list of files containing search pattern")
 	flag.BoolVar(&showNoMatchFiles, "L", false, "Flag to get list of files not containing search pattern")
+
+	flag.IntVar(&stopAfterXMatches, "m", -1, "Stop reading the file after num matches")
+
 	flag.Parse()
 	stdOutWriter = bufio.NewWriter(os.Stdout)
 }
