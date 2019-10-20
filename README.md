@@ -14,7 +14,7 @@ Download for [Mac OS](https://github.com/darkLord19/ugrep/releases/download/0.9/
 ## Usage
 ```
 Usage of ./ugrep:
-  --coloredcross-platform 
+  --colored
     	Flag to specify if you want colored output or not
   --count
     	Count of selected lines is written to standard output
